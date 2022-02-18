@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: db-mysql
+    platform: linux/x86_64
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./mysql_db:/var/lib/mysql"
+    environment:
+     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+
+  apache:
+    container_name: apache-php8-sqlsrv
+    platform: linux/x86_64
+    build: .
+    volumes:
+      - ./www:/var/www/html/
+    ports:
+      - 80:80
+    depends_on:
+      - db
